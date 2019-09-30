@@ -215,8 +215,8 @@ def cv_cat_detector():
 
 
     # show the detected cat faces
-    cv2.imshow("Cat Faces", resized_img)
-    cv2.waitKey(0)
+    #cv2.imshow("Cat Faces", resized_img)
+    #cv2.waitKey(0)
 
     if len(rects) == 0:
         print("no catto on image :(")
