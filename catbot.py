@@ -219,7 +219,7 @@ def cv_cat_detector():
     cv2.waitKey(0)
 
     if len(rects) == 0:
-        print("no catto on iage :(")
+        print("no catto on image :(")
         return False
 
     else:
