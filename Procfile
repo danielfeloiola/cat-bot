@@ -1,1 +1,1 @@
-worker: python puppybot.py
+worker: python catbot.py
