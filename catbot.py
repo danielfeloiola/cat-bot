@@ -32,7 +32,7 @@ from PIL import ImageFile
 
 # import the list with words to block
 from setup import slist
-from cat_detector import cv_cat_detector
+#from cat_detector import cv_cat_detector
 
 
 # create an OAuthHandler
@@ -57,18 +57,12 @@ def check_safety(status):
     if status.text == None:
         print("no status")
         return False
-    if tweet['user']['description'] == None:
-        print("no descripton")
-        return False
+    #if tweet['user']['description'] == None:
+    #    print("no descripton")
+    #ca    return False
     if tweet['user']['name'] == None:
         print("no name")
         return False
-
-    # remove tweets with sensitive content
-    #if tweet['possibly_sensitive'] == True:
-    #    print('FOUND A UNSAFE ONE!!! - possibly_sensitive')
-    #    print(status.text)
-    #    return False
 
     # Make sure it's not a RT
     if (not status.retweeted) and ('RT @' not in status.text) and ('media' in status.entities):
@@ -188,6 +182,49 @@ class MyStreamListener(tweepy.StreamListener):
             print('ERROR 327: You have already retweeted this Tweet')
             return True
 
+def cv_cat_detector():
+
+    # import the necessary packages
+    #import argparse
+    import cv2
+
+    image = cv2.imread ("temp.png", 1)
+    #image = i
+
+    # load the input image and convert it to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    #resized_img = cv2.resize(img, (500,500))
+    resized_img = cv2.resize(image, (int(image.shape[1]/2),int(image.shape[0]/2)))
+
+    # load the cat detector Haar cascade, then detect cat faces
+    # in the input image
+    detector = cv2.CascadeClassifier("haarcascade_frontalcatface.xml")
+
+    #rects = detector.detectMultiScale(gray, scaleFactor=1.3,
+    #	minNeighbors=10, minSize=(75, 75))
+
+    rects = detector.detectMultiScale(resized_img, scaleFactor=1.3,
+        minNeighbors=10, minSize=(75,75))
+
+    # loop over the cat faces and draw a rectangle surrounding each
+    for (i, (x, y, w, h)) in enumerate(rects):
+    	cv2.rectangle(resized_img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    	cv2.putText(resized_img, "Cat #{}".format(i + 1), (x, y - 10),
+    		cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
+
+
+    # show the detected cat faces
+    cv2.imshow("Cat Faces", resized_img)
+    cv2.waitKey(0)
+
+    if len(rects) == 0:
+        print("no catto on iage :(")
+        return False
+
+    else:
+        print("catto on image!!! Catto on image!! :3 ")
+        return True
 
 # Start a stream listener to look for tweets with puppies
 myStreamListener = MyStreamListener()
