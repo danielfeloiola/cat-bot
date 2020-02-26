@@ -16,26 +16,54 @@
 # made by me                                                           #
 ########################################################################
 
-# import libraries needed
 import os
 import json
 import tweepy
-import requests
 
+# stuff
 from time import sleep
 from ssl import SSLError
 from requests.exceptions import Timeout, ConnectionError
 from urllib3.exceptions import ReadTimeoutError
+
+# img stuff
 from io import BytesIO
 from PIL import Image
 from PIL import ImageFile
 
+# db stuff
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+# requests
+import requests
+
+# TF detector
+from cat_app import cat_detector
+
+# make a database
+engine = create_engine("postgres://cjluwlomdljfrw:acf5ae52d95983fe295010712d7fc55d01e6fc28ccaa6c8a28004edca4de7472@ec2-52-86-33-50.compute-1.amazonaws.com:5432/d4glqc73u6070s")
+
+#engine = create_engine(os.getenv("DATABASE_URI"))
+db = scoped_session(sessionmaker(bind=engine))
+
 # import the list with words to block
-from setup import slist
+#from setup import slist
 #from cat_detector import cv_cat_detector
 
 
 # create an OAuthHandler
+
+#if not os.getenv("CONSUMER_KEY"):
+#    raise RuntimeError("CONSUMER_KEY is not set")
+
+# create twitter api
+#consumer_key = os.getenv("CONSUMER_KEY")
+#consumer_secret = os.getenv("CONSUMER_SECRET")
+#access_token = os.getenv("ACCESS_TOKEN")
+#access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
+
+
 consumer_key = '1Wd25mHfJ344bUO0A7ApPsh7q'
 consumer_secret = 'NqbcMRO2hh5Z3ooxLS3UmcnnDYLjKwA3LkpPU7OeFbMNi9sORb'
 access_token = '1177596135529226240-C5ZnVSj8Pi7jBzzWZ4hcxvs7pz2RLR'
@@ -47,100 +75,147 @@ api = tweepy.API(auth)
 
 
 def check_safety(status):
-#check if a tweet is violent or contains porn
+    '''
+    check if a tweet is adequate
+    Looks for bad words on username, text and description
+    checks if threre is a image on the tweet
+    '''
 
     # get tweet out of json package
     tweet_json = json.dumps(status._json)
     tweet = json.loads(tweet_json)
 
-    # Ignore tweets with no text or description or name
-    if status.text == None:
-        print("no status")
-        return False
-    #if tweet['user']['description'] == None:
-    #    print("no descripton")
-    #ca    return False
-    if tweet['user']['name'] == None:
-        print("no name")
-        return False
+    # get words from db
+    safe_list_db = db.execute("SELECT * FROM slist").fetchall()
+
+    # make a list with bad words
+    slist = []
+
+    # add the words from the db to the list
+    for item in safe_list_db:
+        slist.append(item[0])
+
+    # start checking if its a safe tweet
+    # returns false if the test fails
 
     # Make sure it's not a RT
-    if (not status.retweeted) and ('RT @' not in status.text) and ('media' in status.entities):
+    if status.retweeted:
+        print('------------------------------------------')
+        print("RT!")
+        print('------------------------------------------')
+        return False
+    if 'RT @' in status.text:
+        print('------------------------------------------')
+        print("RT!")
+        print('------------------------------------------')
+        return False
 
-        if not any(word in status.text.lower() for word in slist):
+    # check if there is indeed a picture in it
+    if ('media' in status.entities):
 
-            if not any(word in tweet['user']['description'].lower() for word in slist):
+        # looking for bad words
 
-                if not any(word in tweet['user']['name'].lower() for word in slist):
+        # check for p*rn or kpop on the tweet
+        if any(word in status.text.lower() for word in slist):
+            print('')
+            print('------------------------------------------')
+            print('')
+            print('unsafe - text')
+            print(status.text)
+            #print(tweet['user']['name'])
+            #print(tweet['user']['description'])
+            print('')
+            print('------------------------------------------')
+            print('')
+            return False
 
-                    if tweet['possibly_sensitive'] == False:
 
-                        for image in status.entities['media']:
+        # check user name
+        if any(word in tweet['user']['name'].lower() for word in slist):
+            print('')
+            print('------------------------------------------')
+            print('')
+            print('unsafe - name')
+            #print(status.text)
+            print(tweet['user']['name'])
+            #print(tweet['user']['description'])
+            print('')
+            print('------------------------------------------')
+            print('')
+            return False
 
-                            url = image['media_url']
-                            print("URL ------>" + url)
+        #if any(word in tweet['user']['description'].lower() for word in slist):
+        #print('')
+        #print('------------------------------------------')
+        #print('')
+        #    print('unsafe -> description')
+        #    #print(status.text)
+        #    #print(tweet['user']['name'])
+        #    print(tweet['user']['description'])
+        #    print('')
+        #    print('------------------------------------------')
+        #    print('')
+        #    return False
 
-                            filename = 'temp.png'
+        # if the tweet is not marked as sensitive:
+        if tweet['possibly_sensitive'] == False:
+            print('not sensitive')
 
-                            # send a get request
-                            request = requests.get(url, stream=True)
-                            if request.status_code == 200:
+            return True
 
-                                # read data from downloaded bytes and returns a PIL.Image.Image object
-                                i = Image.open(BytesIO(request.content))
+    else:
 
-                                # Saves the image under the given filename
-                                i.save(filename)
+        print('------------------------------------------')
+        print('')
+        print("no image on the tweet")
+        print('')
+        print('------------------------------------------')
 
-                                # call computer vision function
-                                cats = cv_cat_detector()
+        return False
 
-                                if cats == True:
 
-                                    # say its safe
-                                    print('Got a safe tweet')
-                                    print(status.text)
-                                    return True
-                                else:
-                                    return False
 
-                            else:
-                                print("unable to download image")
-                                return False
 
-                    # SHOW REMOVED TWEETS
-                    # if the tweet has kpop or porn on the username:
-                    else:
-                        print('FOUND A UNSAFE ONE!!! - possibly_sensitive')
-                        print(status.text)
-                        print(tweet['user']['name'])
-                        print(tweet['user']['description'])
-                        return False
+def check_cat(status):
+    '''
+    Checks if there is a cat on the image using TensorFlow
+    '''
 
-                # SHOW REMOVED TWEETS
-                # if the tweet has kpop or porn on the username:
-                else:
-                    print('FOUND A UNSAFE ONE!!! - NAME')
-                    print(status.text)
-                    print(tweet['user']['name'])
-                    print(tweet['user']['description'])
-                    return False
+    for image in status.entities['media']:
 
-            # if the tweet has kpop or porn on the user description:
-            else:
-                print('FOUND A UNSAFE ONE!!! - DESCRIPTION')
+        url = image['media_url']
+        print("URL ------>" + url)
+        filename = 'temp.png'
+
+        # send a get request to get the image
+        request = requests.get(url, stream=True)
+        if request.status_code == 200:
+
+            # read data from downloaded bytes and returns a PIL.Image.Image object
+            i = Image.open(BytesIO(request.content))
+
+            # Saves the image under the given filename
+            i.save(filename)
+
+            # call the detector function
+            cat = cat_detector("temp.png")
+
+            # if a dog is detected return true
+            # else return false
+            if cat == True:
+                # say its safe
+                print('GOT A CATTO!')
                 print(status.text)
-                print(tweet['user']['name'])
-                print(tweet['user']['description'])
+                return True
+            else:
                 return False
 
-        # if the tweet has kpop or porn on the text:
+        # if the request for the image fails return false
         else:
-            print('FOUND A UNSAFE ONE!!! - TEXT')
-            print(status.text)
-            print(tweet['user']['name'])
-            print(tweet['user']['description'])
+            print("unable to download image")
             return False
+
+
 
 
 # Creates a class for the listener
@@ -155,17 +230,20 @@ class MyStreamListener(tweepy.StreamListener):
         # if its indeed safe
         if check == True:
 
-            # tries to retweet the tweet - or just gives up
-            try:
-                print('about to retweet')
-                api.retweet(status.id)
-                print('RETWEETED!!!')
-                sleep(1800) # for tweeting every 50 mins
-                print('done sleeping!')
-            except:
-                print('passing...')
-                pass
+            cat_on_image = check_cat(status)
+            if cat_on_image == True:
 
+
+                # tries to retweet the tweet - or just gives up
+                try:
+                    print('about to retweet')
+                    api.retweet(status.id)
+                    print('RETWEETED!!!')
+                    sleep(3600) # for tweeting every 30 mins
+                    print('done sleeping!')
+                except:
+                    print('passing...')
+                    pass
 
     # if there is any error
     def on_error(self, status_code):
@@ -182,49 +260,6 @@ class MyStreamListener(tweepy.StreamListener):
             print('ERROR 327: You have already retweeted this Tweet')
             return True
 
-def cv_cat_detector():
-
-    # import the necessary packages
-    #import argparse
-    import cv2
-
-    image = cv2.imread ("temp.png", 1)
-    #image = i
-
-    # load the input image and convert it to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    #resized_img = cv2.resize(img, (500,500))
-    resized_img = cv2.resize(image, (int(image.shape[1]/2),int(image.shape[0]/2)))
-
-    # load the cat detector Haar cascade, then detect cat faces
-    # in the input image
-    detector = cv2.CascadeClassifier("haarcascade_frontalcatface.xml")
-
-    #rects = detector.detectMultiScale(gray, scaleFactor=1.3,
-    #	minNeighbors=10, minSize=(75, 75))
-
-    rects = detector.detectMultiScale(resized_img, scaleFactor=1.3,
-        minNeighbors=10, minSize=(75,75))
-
-    # loop over the cat faces and draw a rectangle surrounding each
-    for (i, (x, y, w, h)) in enumerate(rects):
-    	cv2.rectangle(resized_img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    	cv2.putText(resized_img, "Cat #{}".format(i + 1), (x, y - 10),
-    		cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 255), 2)
-
-
-    # show the detected cat faces
-    #cv2.imshow("Cat Faces", resized_img)
-    #cv2.waitKey(0)
-
-    if len(rects) == 0:
-        print("no catto on image :(")
-        return False
-
-    else:
-        print("catto on image!!! Catto on image!! :3 ")
-        return True
 
 # Start a stream listener to look for tweets with puppies
 myStreamListener = MyStreamListener()
@@ -246,7 +281,7 @@ while not stream.running:
         print(e)
 
     finally:
-        # wars about the crash
+        # warns about the crash
         print("Stream has crashed. System will restart twitter stream soon!")
 
 # if error escapes jail...
