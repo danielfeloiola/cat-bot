@@ -42,7 +42,7 @@ import requests
 from cat_app import cat_detector
 
 # make a database
-#engine = create_engine(os.getenv("DATABASE_URI"))
+engine = create_engine(os.getenv("DATABASE_URI"))
 db = scoped_session(sessionmaker(bind=engine))
 
 # create an OAuthHandler
