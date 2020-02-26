@@ -255,7 +255,7 @@ stream = tweepy.Stream(auth, myStreamListener)
 
 stream.filter(track=['cat '])
 
-'''
+
 while not stream.running:
     try:
         # start stream
@@ -277,6 +277,3 @@ while not stream.running:
 
 # if error escapes jail...
 print("This error was so bad I have no idea what it was!")
-
-
-'''
