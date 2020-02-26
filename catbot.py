@@ -62,6 +62,13 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 
+print(consumer_key)
+print(consumer_secret)
+print(access_token)
+print(access_token_secret)
+print(api)
+
+
 def check_safety(status):
     '''
     check if a tweet is adequate
@@ -201,17 +208,21 @@ def check_cat(status):
             print("unable to download image")
             return False
 
-
+print("test 0")
 # Creates a class for the listener
 class MyStreamListener(tweepy.StreamListener):
+
+    print("test 1 ")
 
     # if a new tweet gets found out...
     def on_status(self, status):
 
-        print("status found")
+        print("test 2")
 
         # check if tweet is safe
         check = check_safety(status)
+
+        print("test 3")
 
         # if its indeed safe
         if check == True:
