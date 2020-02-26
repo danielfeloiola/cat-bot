@@ -208,6 +208,8 @@ class MyStreamListener(tweepy.StreamListener):
     # if a new tweet gets found out...
     def on_status(self, status):
 
+        print(status)
+
         # check if tweet is safe
         check = check_safety(status)
 
