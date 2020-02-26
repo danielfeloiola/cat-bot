@@ -94,7 +94,6 @@ def check_safety(status):
     # add the words from the db to the list
     for item in safe_list_db:
         slist.append(item[0])
-
     # start checking if its a safe tweet
     # returns false if the test fails
 
@@ -116,7 +115,7 @@ def check_safety(status):
         # looking for bad words
 
         # check for p*rn or kpop on the tweet
-        if any(word in status.text.lower() for word in slist):
+        if any(word in status.text.lower() for word in slist): #<<<<<
             print('')
             print('------------------------------------------')
             print('')
@@ -265,6 +264,10 @@ class MyStreamListener(tweepy.StreamListener):
 myStreamListener = MyStreamListener()
 stream = tweepy.Stream(auth, myStreamListener)
 
+
+stream.filter(track=['cat '])
+
+'''
 while not stream.running:
     try:
         # start stream
@@ -286,3 +289,6 @@ while not stream.running:
 
 # if error escapes jail...
 print("This error was so bad I have no idea what it was!")
+
+
+'''
