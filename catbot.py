@@ -42,32 +42,20 @@ import requests
 from cat_app import cat_detector
 
 # make a database
-engine = create_engine("postgres://cjluwlomdljfrw:acf5ae52d95983fe295010712d7fc55d01e6fc28ccaa6c8a28004edca4de7472@ec2-52-86-33-50.compute-1.amazonaws.com:5432/d4glqc73u6070s")
-
 #engine = create_engine(os.getenv("DATABASE_URI"))
 db = scoped_session(sessionmaker(bind=engine))
 
-# import the list with words to block
-#from setup import slist
-#from cat_detector import cv_cat_detector
-
-
 # create an OAuthHandler
 
-#if not os.getenv("CONSUMER_KEY"):
-#    raise RuntimeError("CONSUMER_KEY is not set")
+if not os.getenv("CONSUMER_KEY"):
+    raise RuntimeError("CONSUMER_KEY is not set")
 
 # create twitter api
-#consumer_key = os.getenv("CONSUMER_KEY")
-#consumer_secret = os.getenv("CONSUMER_SECRET")
-#access_token = os.getenv("ACCESS_TOKEN")
-#access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
-
-consumer_key = '1Wd25mHfJ344bUO0A7ApPsh7q'
-consumer_secret = 'NqbcMRO2hh5Z3ooxLS3UmcnnDYLjKwA3LkpPU7OeFbMNi9sORb'
-access_token = '1177596135529226240-C5ZnVSj8Pi7jBzzWZ4hcxvs7pz2RLR'
-access_token_secret = 'He6eI8SRwFwqQrwd2HC2f1PUhAYIjPrsZlbv7AlWH5O6A'
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
