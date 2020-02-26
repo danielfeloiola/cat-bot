@@ -249,10 +249,6 @@ class MyStreamListener(tweepy.StreamListener):
 myStreamListener = MyStreamListener()
 stream = tweepy.Stream(auth, myStreamListener)
 
-
-stream.filter(track=['cat '])
-
-
 while not stream.running:
     try:
         # start stream
