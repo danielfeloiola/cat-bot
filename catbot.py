@@ -16,6 +16,7 @@
 # made by me                                                           #
 ########################################################################
 
+# import libraries needed
 import os
 import json
 import tweepy
@@ -54,6 +55,8 @@ consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_SECRET")
+
+
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
@@ -79,6 +82,7 @@ def check_safety(status):
     # add the words from the db to the list
     for item in safe_list_db:
         slist.append(item[0])
+
     # start checking if its a safe tweet
     # returns false if the test fails
 
@@ -100,7 +104,7 @@ def check_safety(status):
         # looking for bad words
 
         # check for p*rn or kpop on the tweet
-        if any(word in status.text.lower() for word in slist): #<<<<<
+        if any(word in status.text.lower() for word in slist):
             print('')
             print('------------------------------------------')
             print('')
@@ -158,8 +162,6 @@ def check_safety(status):
         return False
 
 
-
-
 def check_cat(status):
     '''
     Checks if there is a cat on the image using TensorFlow
@@ -200,15 +202,13 @@ def check_cat(status):
             return False
 
 
-
-
 # Creates a class for the listener
 class MyStreamListener(tweepy.StreamListener):
 
     # if a new tweet gets found out...
     def on_status(self, status):
 
-        print(status)
+        print("status found")
 
         # check if tweet is safe
         check = check_safety(status)
@@ -230,6 +230,7 @@ class MyStreamListener(tweepy.StreamListener):
                 except:
                     print('passing...')
                     pass
+
 
     # if there is any error
     def on_error(self, status_code):
