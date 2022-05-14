@@ -2,7 +2,7 @@ tweepy==4.9.0
 python-dotenv==0.10.3
 SQLAlchemy==1.4.36
 psycopg2-binary==2.8.6
-opencv-python==4.5.5.64
+opencv-python-headless==4.5.5.64
 h5py==3.1.0
 matplotlib==3.5.2
 numpy==1.19.3
