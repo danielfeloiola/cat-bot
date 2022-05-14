@@ -131,19 +131,6 @@ def check_safety(status):
             print('')
             return False
 
-        #if any(word in tweet['user']['description'].lower() for word in slist):
-        #print('')
-        #print('------------------------------------------')
-        #print('')
-        #    print('unsafe -> description')
-        #    #print(status.text)
-        #    #print(tweet['user']['name'])
-        #    print(tweet['user']['description'])
-        #    print('')
-        #    print('------------------------------------------')
-        #    print('')
-        #    return False
-
         # if the tweet is not marked as sensitive:
         if tweet['possibly_sensitive'] == False:
             print('not sensitive')
@@ -185,7 +172,7 @@ def check_cat(status):
             # call the detector function
             cat = cat_detector("temp.png")
 
-            # if a dog is detected return true
+            # if a cat is detected return true
             # else return false
             if cat == True:
                 # say its safe

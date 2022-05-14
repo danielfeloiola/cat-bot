@@ -55,8 +55,8 @@ def ResNet50_predict_labels(img_path):
 
 
 def cat_detector(img_path):
-    # We use these ideas to complete the `dog_detector` function below,
-    # which returns `True` if a dog is detected in an image (and `False` if not).
+    # We use these ideas to complete the `cat_detector` function below,
+    # which returns `True` if a cat is detected in an image (and `False` if not).
     ### returns "True" if a dog is detected in the image stored at img_path
     prediction = ResNet50_predict_labels(img_path)
     print(prediction)
