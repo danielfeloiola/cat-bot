@@ -43,7 +43,10 @@ import requests
 from cat_app import cat_detector
 
 # make a database
-engine = create_engine(os.getenv("DATABASE_URI"))
+uri = os.getenv("DATABASE_URI")
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+engine = create_engine(uri)
 db = scoped_session(sessionmaker(bind=engine))
 
 # create an OAuthHandler
