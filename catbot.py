@@ -191,7 +191,7 @@ def check_cat(status):
             return False
 
 # Creates a class for the listener
-class MyStreamListener(tweepy.StreamListener):
+class MyStreamListener(tweepy.Stream):
 
     # if a new tweet gets found out...
     def on_status(self, status):
