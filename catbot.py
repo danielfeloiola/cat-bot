@@ -59,9 +59,9 @@ consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_SECRET")
 
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth)
+#auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+#auth.set_access_token(access_token, access_token_secret)
+#api = tweepy.API(auth)
 
 
 def check_safety(status):
@@ -235,8 +235,18 @@ class MyStreamListener(tweepy.Stream):
 
 
 # Start a stream listener to look for tweets with puppies
-myStreamListener = MyStreamListener()
-stream = tweepy.Stream(auth, myStreamListener)
+#myStreamListener = MyStreamListener()
+#stream = tweepy.Stream(auth, myStreamListener)
+
+stream = tweepy.Stream(
+    consumer_key, consumer_secret,
+    access_token, access_token_secret
+)
+
+#consumer_key = os.getenv("CONSUMER_KEY")
+#consumer_secret = os.getenv("CONSUMER_SECRET")
+#access_token = os.getenv("ACCESS_TOKEN")
+#access_token_secret = os.getenv("ACCESS_SECRET")
 
 while not stream.running:
     try:
