@@ -9,7 +9,7 @@ numpy==1.19.3
 scipy==1.6.0
 tqdm==4.11.2
 keras==2.3.0
-scikit-learn==0.18.1
+scikit-learn==0.23.2
 pillow==9.1.0
 ipykernel==4.6.1
 tensorflow==2.5.0
