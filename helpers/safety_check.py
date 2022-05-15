@@ -62,7 +62,7 @@ def check_safety(status):
 
     # check if there is indeed a picture/video in it
     # don't bother checking words if there's no image/video
-    if ('media' not in status.entities)::
+    if ('media' not in status.entities):
         print('-----------------------> no image on the tweet')
         return False
 
