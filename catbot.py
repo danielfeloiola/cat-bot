@@ -35,7 +35,7 @@ from urllib3.exceptions import ReadTimeoutError
 #from helpers.safety_check import check_safety, check_cat
 #import helpers.safety_check
 #import helpers.safety_check
-from helpers import check_safety, check_cat, cat_detector
+from helpers import check_safety, check_cat
 
 #from .safety_check import check_safety, check_cat
 #import helpers

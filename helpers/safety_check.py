@@ -15,7 +15,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 # TF detector
 #from cat_app import cat_detector
-from computer_vision.cat_detector import cat_detector
+from cat_detector import cat_detector
 
 # make a database
 uri = os.getenv("DATABASE_URI")
