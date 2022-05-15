@@ -52,6 +52,7 @@ class MyStream(tweepy.Stream):
     # if a new tweet gets found out...
     def on_status(self, status):
 
+        '''
         # check if tweet is safe
         check = check_safety(status)
 
@@ -72,7 +73,20 @@ class MyStream(tweepy.Stream):
                 except:
                     print('passing...')
                     pass
+        ''''
+        # check if tweet is safe
+        if check_safety(status) and check_cat(status):
 
+            # tries to retweet the tweet - or just gives up
+            try:
+                print('about to retweet')
+                api.retweet(status.id)
+                print('RETWEETED!!!')
+                sleep(3600) # for tweeting every 30 mins
+                print('done sleeping!')
+            except:
+                print('passing...')
+                pass
 
     # if there is any error
     def on_error(self, status_code):
