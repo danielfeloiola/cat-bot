@@ -4,6 +4,9 @@
 # and calls the computer vision function to check for cats in the pictures    #                                                          #
 ###############################################################################
 
+
+import os
+
 # img stuff
 from io import BytesIO
 from PIL import Image
@@ -16,6 +19,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 # TF detector
 #from cat_app import cat_detector
 from .cat_detector import cat_detector
+
 
 # make a database
 uri = os.getenv("DATABASE_URI")
