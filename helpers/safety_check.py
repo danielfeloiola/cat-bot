@@ -63,35 +63,35 @@ def check_safety(status):
     # check if there is indeed a picture/video in it
     # don't bother checking words if there's no image/video
     if ('media' not in status.entities):
-        print('-----------------------> no image on the tweet')
+        print('--------------------------------> no image on the tweet')
         return False
 
     else:
 
         # Make sure it's not a RT
         if status.retweeted or 'RT @' in status.text:
-            print('-----------------------> RT!')
+            print('--------------------------------> RT!')
             return False
 
         # check for evil cucumbers or kpop on the tweet
         if any(word in status.text.lower() for word in slist):
-            print('-----------------------> unsafe - text: ')
+            print('--------------------------------> unsafe - text: ')
             print(status.text)
             return False
 
         # check user name
         if any(word in tweet['user']['name'].lower() for word in slist):
-            print('-----------------------> unsafe - name: ')
+            print('--------------------------------> unsafe - name: ')
             print(tweet['user']['name'])
             return False
 
         # if the tweet is not marked as sensitive:
         # only tweets with media have this...
         if tweet['possibly_sensitive'] == True:
-            print('Marked as sensitive by Twitter')
+            print('--------------------------------> Marked as sensitive by Twitter')
             return False
         else:
-            print('not sensitive and contains image')
+            print('--------------------------------> not sensitive and contains image')
             return True
 
     
@@ -105,7 +105,7 @@ def check_cat(status):
     for image in status.entities['media']:
 
         url = image['media_url']
-        print("URL ------>" + url)
+        print("--------------------------------> URL: " + url)
         filename = 'temp.png'
 
         # send a get request to get the image

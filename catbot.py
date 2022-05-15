@@ -57,13 +57,13 @@ class MyStream(tweepy.Stream):
 
             # tries to retweet the tweet - or just gives up
             try:
-                print('about to retweet')
+                print('\n*** ABOUT TO RETWEET ***\n')
                 api.retweet(status.id)
-                print('RETWEETED!!!')
+                print('\n*** RETWEETED! ***\n')
                 sleep(3600) # for tweeting every 30 mins
-                print('done sleeping!')
+
             except:
-                print('passing...')
+                print('\n*** RETWEET FAILED ***\n')
                 pass
 
     # if there is any error
@@ -71,14 +71,14 @@ class MyStream(tweepy.Stream):
 
         # Being rate limited for making too many requests.
         if status_code == 420:
-            print('ERROR 420: Too many requests')
+            print('\n*** ERROR 420: Too many requests ***\n')
             sleep(3600)
-            print('Back to work!')
+            print('\n*** Back to work! ***\n')
             return True
 
         # Cannot retweet the same Tweet more than once
         if status_code == 327:
-            print('ERROR 327: You have already retweeted this Tweet')
+            print('\n*** ERROR 327: You have already retweeted this Tweet ***\n')
             return True
 
 

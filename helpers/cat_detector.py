@@ -46,5 +46,4 @@ def cat_detector(img_path):
     # We use these ideas to complete the `cat_detector` function below,
     # which returns `True` if a cat is detected in an image (and `False` if not).
     prediction = ResNet50_predict_labels(img_path)
-    print(prediction)
     return ((prediction <= 292) & (prediction >= 281))
