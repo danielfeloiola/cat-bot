@@ -60,32 +60,34 @@ def check_safety(status):
     for item in safe_list_db:
         slist.append(item[0])
 
-    # Make sure it's not a RT
-    if status.retweeted or 'RT @' in status.text:
-        print('-----------------------> RT!')
-        return False
-
-    # check for evil cucumbers or kpop on the tweet
-    if any(word in status.text.lower() for word in slist):
-        print('-----------------------> unsafe - text: ')
-        print(status.text)
-        return False
-
-    # check user name
-    if any(word in tweet['user']['name'].lower() for word in slist):
-        print('-----------------------> unsafe - name: ')
-        print(tweet['user']['name'])
-        return False
-
-    # if the tweet is not marked as sensitive:
-    if tweet['possibly_sensitive'] == True:
-        print('Marked as sensitive by Twitter')
-        return False
-
     # check if there is indeed a picture in it
+    # don't bother checking words if there's no image
     if ('media' in status.entities):
-        print('not sensitive and contains image')
-        return True
+
+        # Make sure it's not a RT
+        if status.retweeted or 'RT @' in status.text:
+            print('-----------------------> RT!')
+            return False
+
+        # check for evil cucumbers or kpop on the tweet
+        if any(word in status.text.lower() for word in slist):
+            print('-----------------------> unsafe - text: ')
+            print(status.text)
+            return False
+
+        # check user name
+        if any(word in tweet['user']['name'].lower() for word in slist):
+            print('-----------------------> unsafe - name: ')
+            print(tweet['user']['name'])
+            return False
+
+        # if the tweet is not marked as sensitive:
+        if tweet['possibly_sensitive'] == True:
+            print('Marked as sensitive by Twitter')
+            return False
+        else:
+            print('not sensitive and contains image')
+            return True
 
     else:
         print('-----------------------> no image on the tweet')
