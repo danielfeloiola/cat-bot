@@ -121,11 +121,11 @@ def check_cat(status):
             # call the detector function
             if cat_detector("temp.png"):
                 # say its safe
-                print('-----------------------> GOT A CATTO!')
-                print(status.text)
+                print('--------------------------------> GOT A CATTO!')
+                print(f'\n{status.text}\n')
                 return True
             else:
-                print('-----------------------> NO CATTO IN PICTURE')
+                print('--------------------------------> NO CATTO IN PICTURE')
                 return False
 
         # if the request for the image fails return false
