@@ -1,7 +1,7 @@
 ###############################################################################
 # A BOT THAT RETWETS IMAGES OF CATS                                           #
 # This file checks the tweet for unsafe words                                 #
-# and calls the computer vision function to check for cats in the pictures    #                                                          #
+# and calls the computer vision function to check for cats in the pictures    #
 ###############################################################################
 
 

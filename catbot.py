@@ -39,7 +39,7 @@ from helpers import check_safety, check_cat
 
 #from .safety_check import check_safety, check_cat
 #import helpers
-print(helpers)
+#print(helpers)
 
 # make a database
 #uri = os.getenv("DATABASE_URI")
