@@ -9,8 +9,8 @@ ________/\\\\\\\\\__/\\\________/\\\__/\\\\\\\\\\\\\\\__/\\\\\\\\\\\\\\\_
        ____\////\\\\\\\\\__\///\\\\\\\\\/_________\/\\\_______\/\\\\\\\\\\\\\\\_
         _______\/////////_____\/////////___________\///________\///////////////_
 '''
-# Dog detector
-# Uses Keras/TensorFlow to detect a dog in the image
+# Cat detector
+# Uses Keras/TensorFlow to detect a cat in the image
 
 
 # imports
@@ -26,13 +26,6 @@ import cv2
 # define ResNet50 model
 ResNet50_model = ResNet50(weights='imagenet')
 
-# returns "True" if face is detected in image stored at img_path
-def face_detector(img_path):
-    img = cv2.imread(img_path)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray)
-    return len(faces) > 0
-
 
 def path_to_tensor(img_path):
     # loads RGB image as PIL.Image.Image type
@@ -41,11 +34,6 @@ def path_to_tensor(img_path):
     x = image.img_to_array(img)
     # convert 3D tensor to 4D tensor with shape (1, 224, 224, 3) and return 4D tensor
     return np.expand_dims(x, axis=0)
-
-
-def paths_to_tensor(img_paths):
-    list_of_tensors = [path_to_tensor(img_path) for img_path in tqdm(img_paths)]
-    return np.vstack(list_of_tensors)
 
 
 def ResNet50_predict_labels(img_path):
@@ -57,7 +45,6 @@ def ResNet50_predict_labels(img_path):
 def cat_detector(img_path):
     # We use these ideas to complete the `cat_detector` function below,
     # which returns `True` if a cat is detected in an image (and `False` if not).
-    ### returns "True" if a dog is detected in the image stored at img_path
     prediction = ResNet50_predict_labels(img_path)
     print(prediction)
     return ((prediction <= 292) & (prediction >= 281))
