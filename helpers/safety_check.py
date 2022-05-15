@@ -57,7 +57,7 @@ def check_safety(status):
     # returns false if the test fails
 
     # Make sure it's not a RT
-    if status.retweeted or 'RT @' in status.text::
+    if status.retweeted or 'RT @' in status.text:
         print('\n------------------------------------------\n')
         print("RT!")
         print('\n------------------------------------------\n')
