@@ -72,7 +72,7 @@ class MyStream(tweepy.Stream):
         # Being rate limited for making too many requests.
         if status_code == 420:
             print('ERROR 420: Too many requests')
-            sleep(300)
+            sleep(3600)
             print('Back to work!')
             return True
 
