@@ -60,9 +60,13 @@ def check_safety(status):
     for item in safe_list_db:
         slist.append(item[0])
 
-    # check if there is indeed a picture in it
-    # don't bother checking words if there's no image
-    if ('media' in status.entities):
+    # check if there is indeed a picture/video in it
+    # don't bother checking words if there's no image/video
+    if ('media' not in status.entities)::
+        print('-----------------------> no image on the tweet')
+        return False
+
+    else:
 
         # Make sure it's not a RT
         if status.retweeted or 'RT @' in status.text:
@@ -82,6 +86,7 @@ def check_safety(status):
             return False
 
         # if the tweet is not marked as sensitive:
+        # only tweets with media have this...
         if tweet['possibly_sensitive'] == True:
             print('Marked as sensitive by Twitter')
             return False
@@ -89,9 +94,7 @@ def check_safety(status):
             print('not sensitive and contains image')
             return True
 
-    else:
-        print('-----------------------> no image on the tweet')
-        return False
+    
 
 
 def check_cat(status):
@@ -116,15 +119,13 @@ def check_cat(status):
             i.save(filename)
 
             # call the detector function
-            cat = cat_detector("temp.png")
-
-            # confirm if a cat is detected 
-            if cat == True:
+            if cat_detector("temp.png"):
                 # say its safe
-                print('GOT A CATTO!')
+                print('-----------------------> GOT A CATTO!')
                 print(status.text)
                 return True
             else:
+                print('-----------------------> NO CATTO IN PICTURE')
                 return False
 
         # if the request for the image fails return false
