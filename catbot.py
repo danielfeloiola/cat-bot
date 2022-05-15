@@ -35,10 +35,10 @@ from urllib3.exceptions import ReadTimeoutError
 #from helpers.safety_check import check_safety, check_cat
 #import helpers.safety_check
 #import helpers.safety_check
-#from helpers import check_safety, check_cat
+from helpers import check_safety, check_cat, cat_detector
 
 #from .safety_check import check_safety, check_cat
-import helpers
+#import helpers
 print(helpers)
 
 # make a database
@@ -68,12 +68,12 @@ class MyStream(tweepy.Stream):
     def on_status(self, status):
 
         # check if tweet is safe
-        check = helpers.check_safety(status)
+        check = check_safety(status)
 
         # if its indeed safe
         if check == True:
 
-            cat_on_image = helpers.check_cat(status)
+            cat_on_image = check_cat(status)
             if cat_on_image == True:
 
 
