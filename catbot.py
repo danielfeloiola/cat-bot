@@ -24,33 +24,12 @@ from ssl import SSLError
 from requests.exceptions import Timeout, ConnectionError
 from urllib3.exceptions import ReadTimeoutError
 
+
 # functions from the package to check tweets
 from helpers import check_safety, check_cat
 
 
-# db stuff
-#from sqlalchemy import create_engine
-#from sqlalchemy.orm import scoped_session, sessionmaker
-
-# get the functions that tests tweets for safety
-#from helpers.safety_check import check_safety, check_cat
-#import helpers.safety_check
-#import helpers.safety_check
-
-
-#from .safety_check import check_safety, check_cat
-#import helpers
-#print(helpers)
-
-# make a database
-#uri = os.getenv("DATABASE_URI")
-#if uri and uri.startswith("postgres://"):
-#    uri = uri.replace("postgres://", "postgresql://", 1)
-
-#engine = create_engine(uri)
-#db = scoped_session(sessionmaker(bind=engine))
-
-# create an OAuthHandler
+# Get Twitter keys
 if not os.getenv("CONSUMER_KEY"):
     raise RuntimeError("CONSUMER_KEY is not set")
 
@@ -60,6 +39,11 @@ consumer_key = os.getenv("CONSUMER_KEY")
 consumer_secret = os.getenv("CONSUMER_SECRET")
 access_token = os.getenv("ACCESS_TOKEN")
 access_token_secret = os.getenv("ACCESS_SECRET")
+
+# make the api to retweet cats
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth)
 
 
 # Creates a class for the listener
