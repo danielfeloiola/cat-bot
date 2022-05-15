@@ -91,7 +91,7 @@ stream = MyStream(
 # error checking
 while not stream.running:
     try:
-        print("\n*** Started listening to stream... ***\n")
+        print("\n*** Started listening to stream ***\n")
         stream.filter(track=['cat '])
 
     except (Timeout, SSLError, ReadTimeoutError, ConnectionError) as e:
