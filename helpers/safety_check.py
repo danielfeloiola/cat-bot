@@ -6,6 +6,9 @@
 
 
 import os
+import json
+import requests
+
 
 # img stuff
 from io import BytesIO

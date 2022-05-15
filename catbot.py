@@ -18,13 +18,14 @@
 
 # import libraries needed
 import os
-import json
 import tweepy
-import requests
 from time import sleep
 from ssl import SSLError
 from requests.exceptions import Timeout, ConnectionError
 from urllib3.exceptions import ReadTimeoutError
+
+# functions from the package to check tweets
+from helpers import check_safety, check_cat
 
 
 # db stuff
@@ -35,7 +36,7 @@ from urllib3.exceptions import ReadTimeoutError
 #from helpers.safety_check import check_safety, check_cat
 #import helpers.safety_check
 #import helpers.safety_check
-from helpers import check_safety, check_cat
+
 
 #from .safety_check import check_safety, check_cat
 #import helpers
