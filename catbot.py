@@ -27,22 +27,27 @@ from requests.exceptions import Timeout, ConnectionError
 from urllib3.exceptions import ReadTimeoutError
 
 
-
 # db stuff
 #from sqlalchemy import create_engine
 #from sqlalchemy.orm import scoped_session, sessionmaker
 
 # get the functions that tests tweets for safety
-from filters.safe_check import check_safety, check_cat
+#from helpers.safety_check import check_safety, check_cat
+#import helpers.safety_check
+#import helpers.safety_check
+#from helpers import check_safety, check_cat
 
+#from .safety_check import check_safety, check_cat
+import helpers
+print(helpers)
 
 # make a database
-uri = os.getenv("DATABASE_URI")
-if uri and uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
+#uri = os.getenv("DATABASE_URI")
+#if uri and uri.startswith("postgres://"):
+#    uri = uri.replace("postgres://", "postgresql://", 1)
 
-engine = create_engine(uri)
-db = scoped_session(sessionmaker(bind=engine))
+#engine = create_engine(uri)
+#db = scoped_session(sessionmaker(bind=engine))
 
 # create an OAuthHandler
 if not os.getenv("CONSUMER_KEY"):
@@ -63,12 +68,12 @@ class MyStream(tweepy.Stream):
     def on_status(self, status):
 
         # check if tweet is safe
-        check = check_safety(status)
+        check = helpers.check_safety(status)
 
         # if its indeed safe
         if check == True:
 
-            cat_on_image = check_cat(status)
+            cat_on_image = helpers.check_cat(status)
             if cat_on_image == True:
 
 

@@ -122,7 +122,7 @@ def check_cat(status):
 
         url = image['media_url']
         print("URL ------>" + url)
-        filename = 'computer_vision/temp.png'
+        filename = 'temp.png'
 
         # send a get request to get the image
         request = requests.get(url, stream=True)
@@ -151,3 +151,7 @@ def check_cat(status):
         else:
             print("unable to download image")
             return False
+
+
+if __name__ == '__main__':
+    pass
