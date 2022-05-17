@@ -20,7 +20,7 @@ import numpy as np
 #from keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.resnet50 import ResNet50
 from keras.preprocessing import image
-from keras.applications.resnet50 import preprocess_input, decode_predictions
+from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
 from tqdm import tqdm
 import cv2
 
